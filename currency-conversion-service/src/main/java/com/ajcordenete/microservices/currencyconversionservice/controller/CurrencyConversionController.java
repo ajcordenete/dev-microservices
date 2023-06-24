@@ -1,6 +1,8 @@
 package com.ajcordenete.microservices.currencyconversionservice.controller;
 
 import com.ajcordenete.microservices.currencyconversionservice.entity.CurrencyConversion;
+import com.ajcordenete.microservices.currencyconversionservice.proxy.CurrencyExchangeProxy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,10 +14,12 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/currency-conversion")
 public class CurrencyConversionController {
 
-    @GetMapping("/from/{fromCurrency}/to/{toCurrency}/quantity/{quantity}")
+    @Autowired
+    private CurrencyExchangeProxy proxy;
+
+    @GetMapping("/currency-conversion/from/{fromCurrency}/to/{toCurrency}/quantity/{quantity}")
     public CurrencyConversion calculateConversion(
             @PathVariable String fromCurrency,
             @PathVariable String toCurrency,
@@ -41,7 +45,27 @@ public class CurrencyConversionController {
                 quantity,
                 currencyConversion.getConversionMultiplier(),
                 quantity.multiply(currencyConversion.getConversionMultiplier()),
-                currencyConversion.getEnvironment()
+                currencyConversion.getEnvironment() + " " + "rest template"
+        );
+    }
+
+    @GetMapping("/currency-conversion-feign/from/{fromCurrency}/to/{toCurrency}/quantity/{quantity}")
+    public CurrencyConversion calculateConversionUsingProxy(
+            @PathVariable String fromCurrency,
+            @PathVariable String toCurrency,
+            @PathVariable BigDecimal quantity
+    ) {
+
+        CurrencyConversion currencyConversion = proxy.getCurrencyExchange(fromCurrency, toCurrency);
+
+        return new CurrencyConversion(
+                currencyConversion.getId(),
+                currencyConversion.getFromCurrency(),
+                currencyConversion.getToCurrency(),
+                quantity,
+                currencyConversion.getConversionMultiplier(),
+                quantity.multiply(currencyConversion.getConversionMultiplier()),
+                currencyConversion.getEnvironment() + " " + "feign"
         );
     }
 }
