@@ -1,0 +1,15 @@
+Currency Exchange:
+http://localhost:8000/currency-exchange/from/USD/to/INR
+http://localhost:8001/currency-exchange/from/AUD/to/PHP
+
+Currency Conversion:
+http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/20
+
+Eureka
+http://localhost:8761/
+
+API GATEWAY
+http://localhost:8765/currency-exchange/currency-exchange/from/AUD/to/PHP
+
+http://localhost:8765/currency-conversion/currency-conversion/from/USD/to/INR/quantity/20
+http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/20
