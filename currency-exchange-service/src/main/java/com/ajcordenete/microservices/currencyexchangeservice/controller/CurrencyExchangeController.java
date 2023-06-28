@@ -2,6 +2,8 @@ package com.ajcordenete.microservices.currencyexchangeservice.controller;
 
 import com.ajcordenete.microservices.currencyexchangeservice.entity.CurrencyExchange;
 import com.ajcordenete.microservices.currencyexchangeservice.repository.CurrencyExchangeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ import java.math.BigDecimal;
 @RequestMapping("/currency-exchange")
 public class CurrencyExchangeController {
 
+    private Logger logger = LoggerFactory.getLogger(CurrencyExchangeController.class);
+
     @Autowired
     private Environment environment;
 
@@ -26,6 +30,8 @@ public class CurrencyExchangeController {
             @PathVariable String fromCurrency,
             @PathVariable String toCurrency
     ) {
+        logger.info("retrieveExchangeValue called with {} to {}", fromCurrency, toCurrency);
+
         CurrencyExchange exchange = repository.findByFromCurrencyAndToCurrency(fromCurrency, toCurrency);
 
         if(exchange == null) {
